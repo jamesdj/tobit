@@ -109,7 +109,7 @@ def tobit_neg_log_likelihood_der(xs, ys, params):
         mid_sigma = (np.square(mid_stats) - 1).sum()
         sigma_jac += mid_sigma
 
-    combo_jac = np.append(beta_jac, sigma_jac / s)  # by chain rule, since the expression above is dloglik/dlogsigma
+    combo_jac = np.append(beta_jac, sigma_jac / (2*s) )  # by chain rule, since the expression above is dloglik/dlogsigma
 
     return -combo_jac
 
