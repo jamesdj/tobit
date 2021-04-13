@@ -5,6 +5,7 @@ import numpy as np
 import pandas as pd
 from scipy.optimize import minimize
 import scipy.stats
+from scipy.stats import norm # edit
 from scipy.special import log_ndtr
 from sklearn.linear_model import LinearRegression
 from sklearn.metrics import mean_squared_error, mean_absolute_error
@@ -167,3 +168,16 @@ class TobitModel:
     def score(self, x, y, scoring_function=mean_absolute_error):
         y_pred = np.dot(x, self.coef_)
         return scoring_function(y, y_pred)
+
+    # EDIT - insert marginal effects function
+    def margins(self, x, k = 0): 
+        """
+        Marginal effects on dependent variable of a regressor, identified by coef
+        :param x: array with all regressors (independent variables) to make a prediction
+        :param k: coefficient corresponding to the regressor with respect to which we want to take the marginal effects
+        :return: an array with the marginal effects estimated at each observation's level
+
+        The marginal effect of regressor k on individual i's y is defined as the product of coef[k] and the normal cdf 
+        evaluated at x_i * coeff[k] / sigma
+        """
+        return self.coef_[k] * norm.cdf(self.predict(x) / self.sigma_)
